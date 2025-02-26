@@ -79,4 +79,23 @@ const deleteAll = async (req, res) => {
 }
 
 
-module.exports = { register, updateUser, deleteUser, deleteAll }
+const getUserById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id)
+        res.status(200).send(user);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getAllUsers = async (req, res) => {
+    try {
+        const allUsers = await User.find()
+        res.status(200).send(allUsers);        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports = { register, updateUser, deleteUser, deleteAll, getUserById, getAllUsers }
