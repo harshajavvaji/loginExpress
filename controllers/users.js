@@ -22,7 +22,7 @@ const register = async (req, res) => {
     });
 
     await newUser.save();
-    return res.send(200).json({message: 'User created sucessfully'})
+    return res.status(200).json({message: 'User created sucessfully'})
     } catch (error) {
         console.log(error)
     }
@@ -32,7 +32,6 @@ const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, email, password } = req.body;
-        console.log(name)
         updatedFields = {};
         if(name) updatedFields.name = name;
         if(email) updatedFields.email = email
@@ -40,7 +39,6 @@ const updateUser = async (req, res) => {
             const salt = await bcrypt.genSalt(10);
             updatedFields.password = await bcrypt.hash(password, salt);
         }
-        console.log(updatedFields)
         const updated = await User.findByIdAndUpdate(
             id,
             updatedFields,
@@ -59,6 +57,26 @@ const updateUser = async (req, res) => {
     }
 }
 
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const toBeDeletedUser = await User.findByIdAndDelete(
+            id
+        ) 
+        res.status(200).send();
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const deleteAll = async (req, res) => {
+    try {
+        const deleteall = await User.deleteMany({});
+        res.status(200).send('deleted all users')
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
-module.exports = { register, updateUser }
+module.exports = { register, updateUser, deleteUser, deleteAll }
